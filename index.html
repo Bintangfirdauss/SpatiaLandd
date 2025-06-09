@@ -17,7 +17,6 @@
   <script src="js/leaflet-measure.js"></script>
   <script src="js/Autolinker.min.js"></script>
   <style>
-    /* Enhanced navbar styles */
     .navbar {
       background-color: #0f0157 !important;
       padding: 1rem 1.5rem;
@@ -65,7 +64,6 @@
       transform: scale(1.05);
     }
     #map { width: 100%; height: 87vh; }
-    /* Custom Layer Control Styles */
     .custom-layer-control {
       background: rgba(255, 255, 255, 0.95) !important;
       backdrop-filter: blur(10px);
@@ -142,7 +140,6 @@
     }
     .leaflet-control-layers-overlays label:nth-child(1)::before { content: "🏞️ "; }
     .leaflet-control-layers-base label:nth-child(1)::before { content: "🌍 "; }
-    /* Enhanced Legend Styles */
     #legend {
       position: absolute;
       bottom: 20px;
@@ -262,7 +259,6 @@
       background-color: #ffffff;
       color: #ffffff;
     }
-    /* Enhanced Popup Styles */
     .leaflet-popup-content {
       max-width: 900px !important;
       overflow: hidden;
@@ -325,7 +321,6 @@
       color: #a0aec0;
       font-style: italic;
     }
-    /* Responsive navbar */
     @media (max-width: 768px) {
       .navbar .container-fluid {
         flex-direction: column !important;
@@ -368,7 +363,6 @@
         padding: 10px 12px 12px 12px;
       }
     }
-    /* Loading spinner */
     .loading-spinner {
       display: inline-block;
       width: 20px;
@@ -382,7 +376,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    /* Error and success message styles */
     .error-message {
       background: #fee;
       border: 1px solid #fcc;
@@ -400,6 +393,12 @@
       border-radius: 8px;
       margin: 10px 0;
       text-align: center;
+    }
+    .table-hover tr {
+      cursor: pointer;
+    }
+    .table-hover tr:hover {
+      background-color: rgba(102, 126, 234, 0.1) !important;
     }
   </style>
 </head>
@@ -431,7 +430,9 @@
   <script src="js/labels.js"></script>
   <script src="data/Bidang_Tanah_Klewor_1.js"></script>
   <script>
-    // Error handling utilities
+    let map;
+    let layer_Bidang_Tanah_Klewor_1;
+
     function showError(message, details = null) {
       console.error('Error:', message, details);
       Swal.fire({
@@ -461,7 +462,6 @@
       });
     }
 
-    // Enhanced popup content generator
     function createPopupContent(properties) {
       if (!properties || Object.keys(properties).length === 0) {
         return `
@@ -511,9 +511,31 @@
       return content;
     }
 
+    function zoomToFeature(d_nop, nik, nama_wp, nib) {
+      let foundLayer = null;
+      layer_Bidang_Tanah_Klewor_1.eachLayer(function(layer) {
+        const props = layer.feature.properties;
+        if (
+          (d_nop && props.d_nop === d_nop) ||
+          (nik && props.NIK === nik) ||
+          (nama_wp && props.NAMA_WP === nama_wp) ||
+          (nib && props.NIB === nib)
+        ) {
+          foundLayer = layer;
+        }
+      });
+
+      if (foundLayer) {
+        map.fitBounds(foundLayer.getBounds(), { maxZoom: 15 });
+        foundLayer.openPopup();
+      } else {
+        showError('Fitur tidak ditemukan di peta');
+      }
+    }
+
     function initMap() {
       try {
-        var map = L.map('map', {
+        map = L.map('map', {
           zoomControl: false,
           maxZoom: 15,
           minZoom: 1
@@ -608,7 +630,7 @@
         map.createPane('pane_Bidang_Tanah_Klewor_1');
         map.getPane('pane_Bidang_Tanah_Klewor_1').style.zIndex = 401;
         map.getPane('pane_Bidang_Tanah_Klewor_1').style['mix-blend-mode'] = 'normal';
-        var layer_Bidang_Tanah_Klewor_1 = new L.geoJson(json_Bidang_Tanah_Klewor_1, {
+        layer_Bidang_Tanah_Klewor_1 = new L.geoJson(json_Bidang_Tanah_Klewor_1, {
           attribution: '',
           interactive: true,
           dataVar: 'json_Bidang_Tanah_Klewor_1',
@@ -641,7 +663,6 @@
           }
         }, 100);
 
-        // Dynamic legend
         document.getElementById("legend").innerHTML = `
           <div class="legend-header">
             📋 Legenda
@@ -705,7 +726,6 @@
       showLoading('Mencari data...');
 
       try {
-        // Simulate search with local GeoJSON data
         const results = json_Bidang_Tanah_Klewor_1.features.filter(feature => {
           const props = feature.properties;
           return (
@@ -735,12 +755,14 @@
 
           results.forEach(item => {
             const props = item.properties;
-            content += `<tr>
-              <td>${props.d_nop || '-'}</td>
-              <td>${props.NIK || '-'}</td>
-              <td>${props.NAMA_WP || '-'}</td>
-              <td>${props.NIB || '-'}</td>
-            </tr>`;
+            content += `
+              <tr onclick="zoomToFeature('${props.d_nop || ''}', '${props.NIK || ''}', '${props.NAMA_WP ? props.NAMA_WP.replace(/'/g, "\\'") : ''}', '${props.NIB || ''}')">
+                <td>${props.d_nop || '-'}</td>
+                <td>${props.NIK || '-'}</td>
+                <td>${props.NAMA_WP || '-'}</td>
+                <td>${props.NIB || '-'}</td>
+              </tr>
+            `;
           });
 
           content += `</tbody></table></div>`;
