@@ -548,15 +548,16 @@
           position: 'topleft'
         }).addTo(map);
 
-        var measureControl = new L.Control.Measure({
-          position: 'topleft',
-          primaryLengthUnit: 'meters',
-          secondaryLengthUnit: 'kilometers',
-          primaryAreaUnit: 'sqmeters',
-          secondaryAreaUnit: 'hectares'
-        }).addTo(map);
-        document.getElementsByClassName('leaflet-control-measure-toggle')[0].innerHTML = '';
-        document.getElementsByClassName('leaflet-control-measure-toggle')[0].className += ' fas fa-ruler';
+        // Removed measureControl
+        // var measureControl = new L.Control.Measure({
+        //   position: 'topleft',
+        //   primaryLengthUnit: 'meters',
+        //   secondaryLengthUnit: 'kilometers',
+        //   primaryAreaUnit: 'sqmeters',
+        //   secondaryAreaUnit: 'hectares'
+        // }).addTo(map);
+        // document.getElementsByClassName('leaflet-control-measure-toggle')[0].innerHTML = '';
+        // document.getElementsByClassName('leaflet-control-measure-toggle')[0].className += ' fas fa-ruler';
 
         map.createPane('pane_GoogleSatellite_0');
         map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
@@ -572,7 +573,7 @@
 
         var osmDefault = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: '© OpenStreetMap contributors',
-          errorTileUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVycm9yPC90ZXh0Pjwvc3ZnPg=='
+          errorTileUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1lbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVycm9yPC90ZXh0Pjwvc3ZnPg=='
         });
 
         var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
