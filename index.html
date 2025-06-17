@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/leaflet-search.css">
   <link rel="stylesheet" href="css/leaflet-measure.css">
   <link rel="stylesheet" href="css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -47,9 +48,10 @@
       border-radius: 25px 0 0 25px;
     }
     .search-container .form-control:focus {
-      box-shadow: none;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+      border-color: #667eea;
       background: white;
-      border-color: transparent;
+      outline: none;
     }
     .search-container .btn {
       border: none;
@@ -173,11 +175,11 @@
       font-weight: 700;
       text-align: center;
       text-transform: uppercase;
-      letter: 0.8px;
+      letter-spacing: 0.8px;
       position: relative;
       overflow: hidden;
     }
-    #legend .legend-header::before {
+    .legend-header::before {
       content: '';
       position: absolute;
       top: -50%;
@@ -400,6 +402,144 @@
     .table-hover tr:hover {
       background-color: rgba(102, 126, 234, 0.1) !important;
     }
+    /* Styling untuk kartu hasil pencarian */
+    .search-result-modal .modal-dialog {
+      max-width: 60%;
+      margin: 1.5rem auto;
+    }
+    .search-result-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      padding: 10px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .result-card {
+      background: rgba(255, 255, 255, 0.6) !important; /* Ditambahkan !important */
+      border: 1px solid rgba(225, 229, 242, 0.6) !important; /* Ditambahkan !important */
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+      border-color: rgba(102, 126, 234, 0.7);
+    }
+    .result-card-header {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .result-card-header i {
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+    .result-card-body {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+    .result-card-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      border-bottom: 1px solid rgba(241, 243, 245, 0.7);
+      padding-bottom: 4px;
+    }
+    .result-card-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .result-card-label {
+      font-weight: 600;
+      color: #2d3748;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+    .result-card-value {
+      color: #4a5568;
+      text-align: right;
+      max-width: 60%;
+      word-break: break-word;
+    }
+    .result-card-value.empty {
+      color: #a0aec0;
+      font-style: italic;
+    }
+    .result-card-button {
+      margin-top: 12px;
+      text-align: center;
+    }
+    .result-card-btn {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .result-card-btn:hover {
+      background: linear-gradient(45deg, #764ba2, #667eea);
+      transform: scale(1.05);
+    }
+    .result-card-btn:active {
+      transform: scale(0.95);
+      opacity: 0.9;
+    }
+    .result-card-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    }
+    .no-results {
+      text-align: center;
+      padding: 30px;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    .no-results i {
+      display: block;
+      font-size: 2rem;
+      color: #667eea;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 768px) {
+      .search-result-modal .modal-dialog {
+        max-width: 80%;
+      }
+      .search-result-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+      .result-card {
+        padding: 12px;
+      }
+      .result-card-header {
+        font-size: 0.9rem;
+      }
+      .result-card-item {
+        font-size: 0.8rem;
+      }
+    }
+    /* Tambahan untuk mengesampingkan gaya default SweetAlert2 */
+    .swal2-popup {
+      background: rgba(255, 255, 255, 0.6) !important; /* Transparansi pada modal utama */
+      backdrop-filter: blur(4px) !important; /* Efek blur latar belakang */
+    }
+    .swal2-content {
+      background: rgba(255, 255, 255, 0.6) !important; /* Pastikan konten transparan */
+    }
   </style>
 </head>
 <body class="light-theme">
@@ -439,7 +579,10 @@
         icon: 'error',
         title: 'Terjadi Kesalahan',
         text: message,
-        footer: details ? `Detail: ${details}` : null
+        footer: details ? `Detail: ${details}` : null,
+        allowEnterKey: false,
+        allowOutsideClick: true,
+        allowEscapeKey: true
       });
     }
 
@@ -449,7 +592,10 @@
         title: 'Berhasil',
         text: message,
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
+        allowEnterKey: false,
+        allowOutsideClick: true,
+        allowEscapeKey: true
       });
     }
 
@@ -477,6 +623,7 @@
       const fieldLabels = {
         'd_nop': 'NOP',
         'NAMA_WP': 'Nama Pemilik',
+        'SERTIPIKAT': 'Sertipikat',
         'NIK': 'NIK',
         'NIB': 'NIB',
         'TIPE_HAK': 'Tipe Hak'
@@ -491,16 +638,18 @@
       `;
 
       for (const [key, value] of Object.entries(properties)) {
-        const label = fieldLabels[key] || key.replace(/_/g, ' ').toUpperCase();
-        const displayValue = value != null && value !== '' ? value : 'Tidak tersedia';
-        const isEmpty = value == null || value === '';
+        if (fieldLabels[key]) {
+          const label = fieldLabels[key];
+          const displayValue = value != null && value !== '' ? value : 'Tidak tersedia';
+          const isEmpty = value == null || value === '';
 
-        content += `
-          <div class="info-card">
-            <div class="info-label">${label}</div>
-            <div class="info-value ${isEmpty ? 'empty' : ''}">${displayValue}</div>
-          </div>
-        `;
+          content += `
+            <div class="info-card">
+              <div class="info-label">${label}</div>
+              <div class="info-value ${isEmpty ? 'empty' : ''}">${displayValue}</div>
+            </div>
+          `;
+        }
       }
 
       content += `
@@ -548,17 +697,6 @@
           position: 'topleft'
         }).addTo(map);
 
-        // Removed measureControl
-        // var measureControl = new L.Control.Measure({
-        //   position: 'topleft',
-        //   primaryLengthUnit: 'meters',
-        //   secondaryLengthUnit: 'kilometers',
-        //   primaryAreaUnit: 'sqmeters',
-        //   secondaryAreaUnit: 'hectares'
-        // }).addTo(map);
-        // document.getElementsByClassName('leaflet-control-measure-toggle')[0].innerHTML = '';
-        // document.getElementsByClassName('leaflet-control-measure-toggle')[0].className += ' fas fa-ruler';
-
         map.createPane('pane_GoogleSatellite_0');
         map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
         var layer_GoogleSatellite_0 = L.tileLayer('https://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
@@ -573,7 +711,7 @@
 
         var osmDefault = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: '© OpenStreetMap contributors',
-          errorTileUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1lbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVycm9yPC90ZXh0Pjwvc3ZnPg=='
+          errorTileUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1lbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRlIiBkeT0iLjNlcyI+RXJyb3I8L3RleHQ+PC9zdmc+'
         });
 
         var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -707,6 +845,19 @@
         }));
         document.getElementsByClassName('search-button')[0].className += ' fa fa-binoculars';
 
+        // Event listener untuk tombol Enter pada input pencarian
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+              e.preventDefault(); // Cegah perilaku default Enter
+              searchTanah(); // Panggil fungsi pencarian
+            }
+          });
+          searchInput.focus(); // Fokus otomatis pada input saat halaman dimuat
+        } else {
+          console.warn('Elemen #search-input tidak ditemukan');
+        }
       } catch (mapError) {
         console.error('Map initialization error:', mapError);
         showError('Gagal menginisialisasi peta', mapError.message);
@@ -719,7 +870,10 @@
         Swal.fire({
           icon: 'warning',
           title: 'Input Kosong',
-          text: 'Silakan masukkan NOP, NIK, atau Nama untuk mencari.'
+          text: 'Silakan masukkan NOP, NIK, atau Nama untuk mencari.',
+          allowEnterKey: false,
+          allowOutsideClick: true,
+          allowEscapeKey: true
         });
         return;
       }
@@ -741,45 +895,93 @@
 
         if (results.length > 0) {
           let content = `
-            <div class='table-responsive'>
-              <table class='table table-striped table-bordered table-hover table-sm'>
-                <thead class="table-primary">
-                  <tr>
-                    <th>NOP</th>
-                    <th>NIK</th>
-                    <th>Nama Pemilik</th>
-                    <th>NIB</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <div class='search-result-container'>
           `;
 
-          results.forEach(item => {
+          results.forEach((item, index) => {
             const props = item.properties;
+            const cardId = `result-card-${index}`;
             content += `
-              <tr onclick="zoomToFeature('${props.d_nop || ''}', '${props.NIK || ''}', '${props.NAMA_WP ? props.NAMA_WP.replace(/'/g, "\\'") : ''}', '${props.NIB || ''}')">
-                <td>${props.d_nop || '-'}</td>
-                <td>${props.NIK || '-'}</td>
-                <td>${props.NAMA_WP || '-'}</td>
-                <td>${props.NIB || '-'}</td>
-              </tr>
+              <div class='result-card' id='${cardId}'>
+                <div class='result-card-header'>
+                  <i class='fas fa-map-marker-alt'></i>
+                  Bidang Tanah
+                </div>
+                <div class='result-card-body'>
+                  <div class='result-card-item'>
+                    <span class='result-card-label'>NOP</span>
+                    <span class='result-card-value ${props.d_nop ? '' : 'empty'}'>${props.d_nop || 'Tidak tersedia'}</span>
+                  </div>
+                  <div class='result-card-item'>
+                    <span class='result-card-label'>NIK</span>
+                    <span class='result-card-value ${props.NIK ? '' : 'empty'}'>${props.NIK || 'Tidak tersedia'}</span>
+                  </div>
+                  <div class='result-card-item'>
+                    <span class='result-card-label'>Nama Pemilik</span>
+                    <span class='result-card-value ${props.NAMA_WP ? '' : 'empty'}'>${props.NAMA_WP || 'Tidak tersedia'}</span>
+                  </div>
+                  <div class='result-card-item'>
+                    <span class='result-card-label'>NIB</span>
+                    <span class='result-card-value ${props.NIB ? '' : 'empty'}'>${props.NIB || 'Tidak tersedia'}</span>
+                  </div>
+                  <div class='result-card-button'>
+                    <button class='result-card-btn' data-nop='${props.d_nop || ''}' data-nik='${props.NIK || ''}' data-nama='${props.NAMA_WP ? props.NAMA_WP.replace(/'/g, "\\'") : ''}' data-nib='${props.NIB || ''}'>Zoom ke Lokasi</button>
+                  </div>
+                </div>
+              </div>
             `;
           });
 
-          content += `</tbody></table></div>`;
+          content += `</div>`;
 
           Swal.fire({
             title: `📋 Hasil Pencarian (${results.length} data)`,
             html: content,
-            width: '70%',
+            width: '60%',
+            customClass: {
+              popup: 'search-result-modal'
+            },
             confirmButtonText: 'Tutup',
-            confirmButtonColor: '#667eea'
+            confirmButtonColor: '#667eea',
+            showCloseButton: true,
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+            allowEnterKey: false,
+            didOpen: () => {
+              // Tambahkan event listener untuk tombol Zoom ke Lokasi
+              document.querySelectorAll('.result-card-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const nop = button.getAttribute('data-nop');
+                  const nik = button.getAttribute('data-nik');
+                  const nama = button.getAttribute('data-nama');
+                  const nib = button.getAttribute('data-nib');
+                  zoomToFeature(nop, nik, nama, nib);
+                });
+              });
+              // Cegah penutupan modal saat klik kartu
+              document.querySelectorAll('.result-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                });
+              });
+            }
           });
         } else {
           Swal.fire({
             icon: 'info',
             title: 'Tidak Ditemukan',
-            text: `Tidak ada hasil untuk "${query}". Coba kata kunci lain.`
+            html: `
+              <div class='no-results'>
+                <i class='fas fa-search'></i>
+                Tidak ada hasil untuk "${query}". Coba kata kunci lain.
+              </div>
+            `,
+            confirmButtonColor: '#667eea',
+            allowEnterKey: false,
+            allowOutsideClick: true,
+            allowEscapeKey: true
           });
         }
       } catch (err) {
@@ -787,7 +989,10 @@
         Swal.fire({
           icon: 'error',
           title: 'Pencarian Gagal',
-          text: 'Terjadi kesalahan saat mencari data'
+          text: 'Terjadi kesalahan saat mencari data',
+          allowEnterKey: false,
+          allowOutsideClick: true,
+          allowEscapeKey: true
         });
       }
     }
@@ -800,12 +1005,6 @@
         showError('Gagal memuat aplikasi', error.message);
       }
     };
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && document.activeElement.id === 'search-input') {
-        searchTanah();
-      }
-    });
   </script>
 </body>
 </html>
