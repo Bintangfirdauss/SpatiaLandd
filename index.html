@@ -526,7 +526,7 @@
       });
 
       if (foundLayer) {
-        map.fitBounds(foundLayer.getBounds(), { maxZoom: 15 });
+        map.fitBounds(foundLayer.getBounds(), { maxZoom: 20 });
         foundLayer.openPopup();
       } else {
         showError('Fitur tidak ditemukan di peta');
@@ -537,7 +537,7 @@
       try {
         map = L.map('map', {
           zoomControl: false,
-          maxZoom: 15,
+          maxZoom: 20,
           minZoom: 1
         }).fitBounds([[-7.338053598195615, 110.70833944038105], [-7.283625564244425, 110.78890668810976]]);
 
