@@ -888,15 +888,7 @@
             </div>
           `;
         }, 1000);
-
-        map.addControl(new L.Control.Search({
-          layer: layer_Bidang_Tanah_Klewor_1,
-          initial: false,
-          hideMarkerOnCollapse: true,
-          propertyName: 'NIB'
-        }));
-        document.getElementsByClassName('search-button')[0].className += ' fa fa-binoculars';
-
+        
         // Event listener untuk tombol Enter pada input pencarian
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
