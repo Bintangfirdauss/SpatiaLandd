@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="css/leaflet-measure.css">
   <link rel="stylesheet" href="css/fontawesome-all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -929,6 +932,47 @@
         margin-top: 10px;
       }
     }
+
+    /* Geolocation Button Styles */
+    .custom-geolocation-control {
+    position: absolute;
+    top: 150px; /* Lebih jauh ke bawah dari zoom control */
+    left: 10px;
+    z-index: 1001; /* Lebih tinggi dari zoom control (1000) */
+    background: white;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+}
+
+/* Alternatif: Pindah ke posisi kanan atas */
+.custom-geolocation-control.top-right {
+    top: 10px;
+    left: auto;
+    right: 10px;
+
+.geo-btn {
+    width: 30px;
+    height: 30px;
+    background: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.geo-btn:hover {
+    background: #f4f4f4;
+}
+
+.geo-btn:disabled {
+    cursor: not-allowed;
+    background: #fff3cd;
+}
+
   </style>
 </head>
 <body class="light-theme">
@@ -1003,6 +1047,14 @@
     </div>
   </div>
 </nav>
+
+<div class="custom-geolocation-control">
+    <button class="geo-btn" id="geoLocationBtn" onclick="findUserLocation()" title="Temukan lokasi saya">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 3l18 9-8.5 2L9 21z"/>
+    </button>
+</div>
+
 
   <div id="map"></div>
   <div id="legend"></div>
@@ -1597,6 +1649,106 @@ function updateLegend() {
   document.getElementById("legend").innerHTML = legendContent;
 }
 
+// Geolocation Control Class
+let userLocationMarker = null;
+
+function findUserLocation() {
+    const btn = document.getElementById('geoLocationBtn');
+    
+    if (!navigator.geolocation) {
+        alert('Geolocation tidak didukung browser ini');
+        return;
+    }
+    
+    // Set loading state
+    btn.innerHTML = '⏳';
+    btn.disabled = true;
+    btn.title = 'Mencari lokasi...';
+    
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Hapus marker sebelumnya jika ada
+            if (userLocationMarker) {
+                map.removeLayer(userLocationMarker);
+            }
+            
+            // Tambah marker baru
+            userLocationMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'custom-location-marker',
+                    html: '<div style="background: #007bff; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>',
+                    iconSize: [22, 22],
+                    iconAnchor: [11, 11]
+                })
+            }).addTo(map);
+            
+            // Popup info
+            userLocationMarker.bindPopup(`
+                <strong>📍 Lokasi Anda</strong><br>
+                Lat: ${lat.toFixed(6)}<br>
+                Lng: ${lng.toFixed(6)}
+            `).openPopup();
+            
+            // Pindah ke lokasi
+            map.setView([lat, lng], 16);
+            
+            // Reset button
+            btn.innerHTML = '✓';
+            btn.style.color = 'green';
+            btn.title = 'Lokasi ditemukan';
+            
+            const arrowIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3l18 9-8.5 2L9 21z"/></svg>';
+
+            setTimeout(() => {
+                btn.innerHTML = arrowIcon;
+                btn.style.color = '';
+                btn.disabled = false;
+                btn.title = 'Temukan lokasi saya';
+            }, 2000);
+            
+            console.log('Lokasi berhasil ditemukan:', lat, lng);
+        },
+        function(error) {
+            console.error('Error geolocation:', error);
+            
+            let errorMsg = 'Gagal mendapatkan lokasi';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMsg = 'Akses lokasi ditolak';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMsg = 'Lokasi tidak tersedia';
+                    break;
+                case error.TIMEOUT:
+                    errorMsg = 'Timeout';
+                    break;
+            }
+            
+            alert(errorMsg);
+            
+            // Reset button
+            btn.innerHTML = '❌';
+            btn.style.color = 'red';
+            btn.title = errorMsg;
+            
+            setTimeout(() => {
+                btn.innerHTML = '📍';
+                btn.style.color = '';
+                btn.disabled = false;
+                btn.title = 'Temukan lokasi saya';
+            }, 3000);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+        }
+    );
+}
+
 // Tutup dropdown jika klik di luar
 document.addEventListener('click', function(event) {
   const dropdown = document.querySelector('.filter-dropdown');
@@ -1619,6 +1771,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showError('Gagal memuat aplikasi', error.message);
       }
     };
+    
   </script>
 </body>
 </html>
